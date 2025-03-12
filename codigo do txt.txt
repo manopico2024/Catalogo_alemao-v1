@@ -1,0 +1,49 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QMessageBox, QFileDialog
+
+
+class GeradorTxtApp(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Configurações da janela
+        self.setWindowTitle("Gerador de Arquivo TXT")
+        self.setGeometry(100, 100, 300, 150)
+
+        # Layout
+        layout = QVBoxLayout()
+
+        # Botão para gerar o arquivo TXT
+        self.botao_gerar = QPushButton("Gerar Arquivo TXT", self)
+        self.botao_gerar.clicked.connect(self.gerar_txt)
+        layout.addWidget(self.botao_gerar)
+
+        # Definir o layout na janela
+        self.setLayout(layout)
+
+    def gerar_txt(self):
+        # Abrir uma caixa de diálogo para escolher o local e nome do arquivo
+        nome_arquivo, _ = QFileDialog.getSaveFileName(self, "Salvar Arquivo TXT", "", "Arquivos TXT (*.txt)")
+
+        if nome_arquivo:
+            try:
+                # Conteúdo a ser salvo no arquivo
+                conteudo = "Este é um exemplo de conteúdo gerado pelo PyQt5.\n" \
+                           "Você pode adicionar qualquer texto aqui!"
+
+                # Escrever no arquivo
+                with open(nome_arquivo, "w", encoding="utf-8") as arquivo:
+                    arquivo.write(conteudo)
+
+                # Exibir mensagem de sucesso
+                QMessageBox.information(self, "Sucesso", f"Arquivo salvo com sucesso em:\n{nome_arquivo}")
+            except Exception as e:
+                # Exibir mensagem de erro em caso de falha
+                QMessageBox.critical(self, "Erro", f"Ocorreu um erro ao salvar o arquivo:\n{str(e)}")
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = GeradorTxtApp()
+    janela.show()
+    sys.exit(app.exec_())
